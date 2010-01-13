@@ -22,6 +22,23 @@ module QueueToTheFuture
 end
 
 module Kernel
+  # Main interface for asynchronous job scheduling. (Where the magick begins)
+  # 
+  # @example
+  #   http        = Net::HTTP.new("ia.media-imdb.com")
+  #   image_path  = "/images/M/MV5BMTkzNDQyMjc0OV5BMl5BanBnXkFtZTcwNDQ4MDYyMQ@@._V1._SX100_SY133_.jpg"
+  #   
+  #   image = Future(image_path) do |path|
+  #     http.request(Net::HTTP::Get.new(path)).body
+  #   end
+  # 
+  #   # do other things
+  #
+  #  puts image.size # => 6636
+  #
+  # @param *args An arbitrary number of args to be passed to the block
+  # @param [Proc] &block The code to be executed
+  # @return [QueueToTheFuture::Job] Your proxy into the future
   def Future(*args, &block)
     QueueToTheFuture.schedule(QueueToTheFuture::Job.new(*args, &block))
   end

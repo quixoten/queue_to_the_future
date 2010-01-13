@@ -1,19 +1,19 @@
-= queue_to_the_future
+= Queue to the Future!
 
 An easy way to create asynchronous execution paths in an unobtrusive way. Queue to the Future uses a managed pool of workers
 to keep overhead to a minimum.
 
 == Synopsis
-  f = Future(list, of, args) do |list, of, args|
-    sleep(1)
-    "done."
-  end
+  require "queue_to_the_future"
   
   # returns immediately
-  puts f.inspect            #=> #<QueueToTheFuture::Job:0x7ffa641c ... >
+  result = Future("list", "of", "args") do |*args|
+    sleep(1)
+    args.join(" ")
+  end
   
   # blocks until completed
-  puts f                    #=> done.
+  puts result                    #=> "list of args"
 
 == Copyright
 
