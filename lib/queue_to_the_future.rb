@@ -5,19 +5,21 @@ require 'queue_to_the_future/worker'
 require 'queue_to_the_future/job'
 
 module QueueToTheFuture
-  @@maximum_workers = 15
-  
+  # The maximum number of workers to create for processing jobs.
+  #
+  # @return [Fixnum] Default is 15
   def self.maximum_workers
-    @@maximum_workers
+    @@maximum_workers ||= 15
   end
   
+  # Setter method for {maximum_workers}
+  #
+  # @param [Fixnum] number Any integer greater than 0
+  # @return [Fixnum] number given
+  # @raise [StandardError] If the number given is less than 1
   def self.maximum_workers=(number)
     raise StandardError.new("Bad workforce size: #{number}. Must be at least 1.") unless (number = number.to_i) >= 1
     @@maximum_workers = number
-  end
-  
-  def self.schedule(job)
-    Coordinator.instance.schedule(job)
   end
 end
 
@@ -34,12 +36,11 @@ module Kernel
   # 
   #   # do other things
   #
-  #  puts image.size # => 6636
+  #   puts image.size # => 6636
   #
-  # @param *args An arbitrary number of args to be passed to the block
-  # @param [Proc] &block The code to be executed
+  # @param (see QueueToTheFuture::Job#initialize)
   # @return [QueueToTheFuture::Job] Your proxy into the future
   def Future(*args, &block)
-    QueueToTheFuture.schedule(QueueToTheFuture::Job.new(*args, &block))
+    QueueToTheFuture::Job.new(*args, &block)
   end
 end
