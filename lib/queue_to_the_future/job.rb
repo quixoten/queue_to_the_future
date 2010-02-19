@@ -1,7 +1,7 @@
 module QueueToTheFuture
   # A proxy object for the future return value of a block.
   class Job
-    (instance_methods - %w[__send__ __id__ object_id inspect]).each { |meth| undef_method(meth) }
+    instance_methods.each { |meth| undef_method(meth) unless %w(__send__ __id__ object_id inspect).include?(meth.to_s) }
     
     # Creates a job and schedules it by calling {Coordinator#schedule}.
     #
