@@ -29,7 +29,7 @@ module QueueToTheFuture
     # Accessing any method on the job will cause code to block
     # until the job is completed.
     def method_missing(*args, &block)
-      Thread.pass while !defined?(@result)
+      Thread.pass until defined?(@result)
       @result.send(*args, &block)
     end
   end
