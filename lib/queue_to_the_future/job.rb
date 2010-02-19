@@ -19,6 +19,9 @@ module QueueToTheFuture
     # @return [nil]
     def __execute__
       @result = @block.call(*@args); nil
+      
+      # Prevent multiple executions
+      def __execute__; @result; end
     end
     
     # Allows the job to behave as the return value of the block.
