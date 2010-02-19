@@ -11,7 +11,7 @@ describe "QueueToTheFuture" do
     QueueToTheFuture::Coordinator.instance.workforce_size.should be(1)
     f.inspect.should match(/^#<QueueToTheFuture::Job/)
     f.should eql([1,2,3])
-    (Time.now.to_f - start).should be_close(0.1, 0.001)
+    (Time.now.to_f - start).should be_close(0.1, 0.005)
     Thread.pass
     QueueToTheFuture::Coordinator.instance.workforce_size.should be(0)
   end
