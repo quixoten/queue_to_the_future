@@ -1,4 +1,6 @@
 require 'thread'
+require 'singleton'
+require 'mutex_m'
 
 require 'queue_to_the_future/coordinator'
 require 'queue_to_the_future/worker'
