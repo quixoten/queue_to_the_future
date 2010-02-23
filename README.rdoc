@@ -17,4 +17,4 @@ to keep overhead to a minimum.
 
 == Copyright
 
-Copyright (c) 2010 Devin Christensen. See LICENSE for details.
+Copyright (c) 2009-2010 Devin Christensen. See LICENSE for details.
