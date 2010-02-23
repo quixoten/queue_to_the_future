@@ -1,18 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "QueueToTheFuture" do
-  it "should work" do
-    start = Time.now.to_f
-    
-    f = Future(1, 2, 3) do |*args|
-      sleep(0.1); args
-    end
-    
-    QueueToTheFuture::Coordinator.instance.workforce_size.should be(1)
-    f.inspect.should match(/^#<QueueToTheFuture::Job/)
-    f.should eql([1,2,3])
-    (Time.now.to_f - start).should be_close(0.1, 0.005)
-    Thread.pass
-    QueueToTheFuture::Coordinator.instance.workforce_size.should be(0)
+  it "should allow the workforce size to be modified" do
+    lambda { QueueToTheFuture.maximum_workers = 20 }.should_not raise_exception()
+  end
+  
+  it "should not accept a workforce size less than 1" do
+    lambda { QueueToTheFuture.maximum_workers = 0 }.should raise_exception(StandardError, /Bad workforce size/)
+  end
+  
+  it "should provide the version being used" do
+    QueueToTheFuture.VERSION.should match(/\d+\.\d+\.\d+/)
+  end
+  
+  it "should provide a Kernel level API for job creation" do
+    f = Future() { sleep(0.1); "blargh" }
+    f.inspect.should match(/QueueToTheFuture::Job/)
   end
 end

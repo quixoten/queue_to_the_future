@@ -1,12 +1,16 @@
 require 'thread'
-require 'singleton'
 require 'mutex_m'
+require 'singleton'
 
 require 'queue_to_the_future/coordinator'
-require 'queue_to_the_future/worker'
 require 'queue_to_the_future/job'
 
 module QueueToTheFuture
+  # Returns the current version of QueueToTheFuture
+  def self.VERSION
+    @@version ||= open(File.join(File.dirname(__FILE__), '..', 'VERSION')).read.strip
+  end
+  
   # The maximum number of workers to create for processing jobs.
   #
   # @return [Fixnum] Default is 15

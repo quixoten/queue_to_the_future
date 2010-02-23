@@ -10,7 +10,8 @@ module QueueToTheFuture
     def initialize(*args, &block)
       @args   = args
       @block  = block
-      Coordinator::instance.schedule(self)
+      
+      Coordinator.schedule(self)
     end
     
     # Execute the job.
@@ -18,10 +19,12 @@ module QueueToTheFuture
     # This is called by the worker the job gets assigned to.
     # @return [nil]
     def __execute__
-      @result = @block.call(*@args); nil
-      
+      @result = @block[*@args]
+    rescue Exception => e
+      @result = e
+    ensure
       # Prevent multiple executions
-      def __execute__; @result; end
+      def self.__execute__; nil; end
     end
     
     # Allows the job to behave as the return value of the block.
@@ -30,7 +33,15 @@ module QueueToTheFuture
     # until the job is completed.
     def method_missing(*args, &block)
       Thread.pass until defined?(@result)
-      @result.send(*args, &block)
+      
+      case @result
+      when Exception
+        def self.method_missing(*args, &block); raise @result; end
+      else
+        def self.method_missing(*args, &block); @result.send(*args, &block); end
+      end
+      
+      self.method_missing(*args, &block)
     end
   end
 end
